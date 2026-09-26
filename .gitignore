@@ -1,0 +1,22 @@
+# Python bytecode and tool caches are generated locally.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# The virtual environment contains installed dependencies for this machine.
+.venv/
+.uv-cache/
+
+# Coverage, build, and packaging outputs are reproducible artifacts.
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Local editor and operating-system files do not describe the project.
+.idea/
+.vscode/
+.DS_Store
