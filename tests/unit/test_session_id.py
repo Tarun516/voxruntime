@@ -5,7 +5,7 @@ from uuid import UUID
 
 import pytest
 
-from voxruntime.domain.identifiers import SessionId
+from voxruntime.domain.identifiers import EventId, SessionId
 
 
 def test_new_session_id_contains_a_uuid() -> None:
@@ -58,3 +58,12 @@ def test_direct_construction_enforces_runtime_type() -> None:
 
     with pytest.raises(TypeError, match="must be a UUID"):
         SessionId(invalid_value)
+
+
+def test_different_domain_identity_types_are_not_equal() -> None:
+    """Equal UUID primitives do not erase the domain meaning of their wrappers."""
+    raw = "12345678-1234-5678-1234-567812345678"
+    session_identity: object = SessionId.parse(raw)
+    event_identity: object = EventId.parse(raw)
+
+    assert session_identity != event_identity

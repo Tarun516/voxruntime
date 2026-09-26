@@ -1,4 +1,4 @@
-.PHONY: check format inspect
+.PHONY: benchmark-events check format inspect
 
 # Keep uv's writable cache inside the checkout for restricted environments.
 export UV_CACHE_DIR := .uv-cache
@@ -18,3 +18,7 @@ format:
 # Measure what changes when the VoxRuntime package is imported.
 inspect:
 	uv run python tools/inspect_import.py
+
+# Measure event-envelope round trips under a repeatable local workload.
+benchmark-events:
+	uv run python tools/benchmark_events.py --iterations 10000

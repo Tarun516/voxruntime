@@ -155,3 +155,21 @@ unchanged `ru_maxrss` cannot show that import allocated zero memory.
 
 These results describe this environment and import graph. They are neither a
 production budget nor a claim about a future realtime worker.
+
+## Measurement Record: Checkpoint 0.2 Event Round Trips
+
+- Date: 2026-09-26
+- Runtime: CPython 3.12.13 in `.venv`
+- Workload: 10,000 sequential serialize/deserialize cycles
+- Representative wire size: 560 bytes
+- Wall time: approximately 3.081 seconds
+- Process CPU time: approximately 3.058 seconds
+- Observed throughput: approximately 3,246 round trips/second
+- Peak Python memory reported by `tracemalloc` during loop: 145,414 bytes
+- Threads/tasks/network: one thread, no async tasks, no network I/O by design
+
+The benchmark runs with allocation tracing, which changes cost. It retains only
+the current serialized/restored event rather than a queue of 10,000 events.
+Therefore the peak is evidence about this streaming loop, not memory required to
+buffer 10,000 envelopes. Production capacity must be measured with real payload
+distributions, queue bounds, concurrency, persistence, and telemetry.

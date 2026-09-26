@@ -16,6 +16,10 @@ stable unless the canonical design is deliberately revised.
 Goal: make the core vocabulary and correctness rules executable without real
 media or provider dependencies.
 
+Canonical progress: Checkpoints 0.1 (repository/domain skeleton) and 0.2
+(canonical event model) are complete. Learner practice remains tracked
+separately in the learning journal.
+
 1. Repository and domain skeleton.
 2. Core identifiers and immutable value objects.
 3. Canonical event model and schema versioning.

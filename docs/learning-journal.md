@@ -18,6 +18,9 @@ Self-reported confidence is useful but is distinct from demonstrated behavior.
 | Audio representation | Foundations handbook | Not assessed | Calculate bytes per frame |
 | Models and tool calls | Foundations handbook | Not assessed | Identify what must be validated |
 | Runtime resource measurement | Resource model and measured 0.1 baseline | Not assessed | Explain RSS versus traced Python allocations |
+| Event identity and delivery | Checkpoint 0.2 walkthrough | Not assessed | Explain one event delivered twice |
+| Serialization and schema | Checkpoint 0.2 walkthrough | Not assessed | Predict mutation and insertion-order tests |
+| Durability classes | ADR-0003 and Checkpoint 0.2 | Not assessed | Classify a new event and justify pressure behavior |
 
 ## Per-Lesson Entry Template
 

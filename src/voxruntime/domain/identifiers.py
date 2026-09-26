@@ -6,13 +6,12 @@ from uuid import UUID, uuid4
 
 
 @dataclass(frozen=True, slots=True)
-class SessionId:
-    """Identify one voice session with an immutable UUID value.
+class UUIDIdentifier:
+    """Provide shared immutable behavior for UUID-backed domain identities.
 
     Why:
-        A dedicated type communicates that the value identifies a session and
-        prevents APIs from accepting an arbitrary string by convention alone.
-        The runtime check preserves the class invariant even though Python type
+        Subclasses give otherwise identical UUID values different domain types.
+        The runtime check preserves the base invariant even though Python type
         annotations are not enforced automatically.
 
     Attributes:
@@ -40,11 +39,11 @@ class SessionId:
         """
         # 1. Enforce at runtime what the annotation communicates to type checkers.
         if not isinstance(self.value, UUID):
-            raise TypeError("SessionId value must be a UUID")
+            raise TypeError(f"{type(self).__name__} value must be a UUID")
 
     @classmethod
     def new(cls) -> Self:
-        """Create a session identity using a random version-4 UUID.
+        """Create a domain identity using a random version-4 UUID.
 
         Solution category:
             Identity generation delegated to Python's standard library.
@@ -58,13 +57,13 @@ class SessionId:
 
     @classmethod
     def parse(cls, raw: str) -> Self:
-        """Parse a textual UUID into a validated session identity.
+        """Parse textual UUID input into the requested domain identity.
 
         Args:
             raw: Text expected to contain a UUID accepted by ``uuid.UUID``.
 
         Returns:
-            A new immutable ``SessionId`` representing the parsed UUID.
+            A new immutable identity of the class on which this method is called.
 
         Raises:
             ValueError: If ``raw`` is not valid UUID text.
@@ -93,3 +92,38 @@ class SessionId:
             O(1) time and O(1) auxiliary space because UUID width is fixed.
         """
         return str(self.value)
+
+
+@dataclass(frozen=True, slots=True)
+class SessionId(UUIDIdentifier):
+    """Identify one realtime conversation session."""
+
+
+@dataclass(frozen=True, slots=True)
+class CallId(UUIDIdentifier):
+    """Identify one durable call record associated with a session."""
+
+
+@dataclass(frozen=True, slots=True)
+class TurnId(UUIDIdentifier):
+    """Identify one conversational turn inside a session."""
+
+
+@dataclass(frozen=True, slots=True)
+class EventId(UUIDIdentifier):
+    """Identify one logical event across at-least-once delivery attempts."""
+
+
+@dataclass(frozen=True, slots=True)
+class GenerationId(UUIDIdentifier):
+    """Identify one replaceable generation of reasoning or output."""
+
+
+@dataclass(frozen=True, slots=True)
+class OperationId(UUIDIdentifier):
+    """Identify one logical business operation across network attempts."""
+
+
+@dataclass(frozen=True, slots=True)
+class WorkerId(UUIDIdentifier):
+    """Identify one realtime worker process registration."""

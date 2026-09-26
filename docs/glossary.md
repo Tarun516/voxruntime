@@ -104,6 +104,73 @@ common misconception, trade-off, and practice question with explanation.
 Record version-specific behavior with a source when implementing it. The
 reading map above is initial coverage, not a claim that every term is mastered.
 
+## Event Model Vocabulary
+
+### Event
+
+A named record that something relevant happened. In VoxRuntime an event carries
+identity, correlation, ordering, time, durability, and payload metadata. An
+event describes a fact or observation; it is not the same as the queue message
+attempt used to transport it.
+
+### Event Envelope
+
+The common outer structure around an event payload. Consumers can inspect its
+type, schema version, identity, sequence, and clocks without first knowing the
+event-specific payload fields.
+
+### Payload
+
+Event-specific data inside the envelope, represented by the JSON data model in
+Checkpoint 0.2. The envelope supplies common metadata; the payload explains the
+particular fact, such as transcript text.
+
+### Event Registry
+
+The single mapping from every `EventType` to its stable meaning and durability
+policy. Producers derive policy from it rather than maintaining local copies.
+
+### Enum / `StrEnum`
+
+An enumeration defines a closed set of named values. Python's `StrEnum` members
+also have string values, which makes the event name explicit at the JSON edge.
+
+### Schema Version
+
+An integer identifying the interpretation of serialized fields. A new version
+requires an explicit compatibility or migration path; it is not merely a code
+release number.
+
+### At-Least-Once Delivery
+
+A delivery guarantee in which a message is retried until acknowledged and may
+therefore reach a consumer more than once. It prevents assuming silent loss but
+requires idempotent or deduplicating consumers.
+
+### Duplicate Delivery
+
+Another delivery attempt for the same logical `event_id`. It differs from a new
+event describing a later occurrence of the same event type.
+
+### Aggregate Sequence Number
+
+A positive number ordering events within an aggregate such as one session. It
+helps reconstruct order but does not force different transports to arrive in
+that order.
+
+### Durability Class
+
+Policy describing what may happen to an event under pressure: Class A is
+recoverable critical truth, Class B is bounded diagnostic history, and Class C
+is high-volume data that policy may coalesce, sample, or drop.
+
+### Deterministic Serialization
+
+Equivalent supported values produce the same serialized text under the declared
+codec contract. Checkpoint 0.2 sorts JSON keys, fixes separators/timestamp shape,
+and rejects non-finite numbers. This is not a universal cryptographic
+canonicalization claim.
+
 ## Agent
 
 A stable logical voice-agent identity. Mutable metadata belongs to the agent;
